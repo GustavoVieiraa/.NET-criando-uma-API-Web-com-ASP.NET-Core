@@ -3,7 +3,7 @@ using ScreenSound.Modelos;
 
 namespace ScreenSound.Data
 {
-    internal class ScreenSoundContext: DbContext
+    public class ScreenSoundContext: DbContext
     {
         public DbSet<Artista> Artistas { get; set; }
 
