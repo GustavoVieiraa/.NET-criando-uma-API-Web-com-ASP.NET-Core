@@ -4,6 +4,13 @@ public class Musica
 {
 
     public Musica() { }
+
+    public Musica(string nome, int anoLancamento) 
+    {
+        Nome = nome;
+        AnoLancamento = anoLancamento;
+    }
+
     public Musica(string nome)
     {
         Nome = nome;
