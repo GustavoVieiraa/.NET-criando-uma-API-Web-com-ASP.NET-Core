@@ -6,14 +6,16 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<ScreenSoundContext>();
+builder.Services.AddTransient<DAL<Artista>>();
+
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 var app = builder.Build();
 
 app.MapGet("/", () => " API do Projeto ScreenSound está rodando!");
 
-app.MapGet("/Artistas", () =>
+app.MapGet("/Artistas", ([FromServices] DAL<Artista> dal) =>
 {
-    var dal = new DAL<Artista>(new ScreenSoundContext());
     return Results.Ok(dal.Listar());
 });
 
@@ -33,8 +35,7 @@ app.MapGet("/Artistas/{nome}", (string nome) =>
 
 });
 
-app.MapPost("/Artistas", ([FromBody]Artista artista) => {
-    var dal = new DAL<Artista>(new ScreenSoundContext());
+app.MapPost("/Artistas", ([FromServices] DAL < Artista > dal, [FromBody]Artista artista) => {
     dal.Adicionar(artista);
     return Results.Ok();
 });
