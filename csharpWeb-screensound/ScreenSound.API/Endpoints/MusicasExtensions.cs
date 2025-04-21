@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ScreenSound.API.Requests;
+using ScreenSound.API.Response;
 using ScreenSound.Data;
 using ScreenSound.Modelos;
 
@@ -12,7 +13,15 @@ namespace ScreenSound.API.Endpoints
             #region Endpoint Músicas
             app.MapGet("/Musicas", ([FromServices] DAL<Musica> dal) =>
             {
-                return Results.Ok(dal.Listar());
+                return dal.Listar();
+                /*var musicaList = dal.Listar();
+                if (musicaList is null)
+                {
+                    return Results.NotFound();
+                }
+
+                var musicaListResponse = EntityListToResponseList(musicaList);
+                return Results.Ok(musicaListResponse);*/
             });
 
             app.MapGet("/Musicas/{nome}", ([FromServices] DAL<Musica> dal, string nome) =>
@@ -22,7 +31,7 @@ namespace ScreenSound.API.Endpoints
                 {
                     return Results.NotFound();
                 }
-                return Results.Ok(musica);
+                return Results.Ok(EntityToResponse(musica));
 
             });
 
@@ -58,6 +67,15 @@ namespace ScreenSound.API.Endpoints
                 return Results.Ok();
             });
             #endregion
+        }
+        private static ICollection<MusicaResponse> EntityListToResponseList(IEnumerable<Musica> musicaList)
+        {
+            return musicaList.Select(a => EntityToResponse(a)).ToList();
+        }
+
+        private static MusicaResponse EntityToResponse(Musica musica)
+        {
+            return new MusicaResponse(musica.Id, musica.Nome!, musica.Artista!.Id, musica.Artista.Nome);
         }
     }
 }

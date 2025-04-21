@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using ScreenSound.Modelos;
 
 namespace ScreenSound.Data
