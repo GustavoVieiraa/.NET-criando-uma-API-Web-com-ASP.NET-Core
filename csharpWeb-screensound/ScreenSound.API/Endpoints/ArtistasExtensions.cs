@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ScreenSound.API.Requests;
+using ScreenSound.API.Response;
 using ScreenSound.Data;
 using ScreenSound.Modelos;
 
@@ -69,7 +70,7 @@ namespace ScreenSound.API.Endpoints
                 return Results.Ok();
 
             });
-            #endregion
+        #endregion
         }
     }
 }
