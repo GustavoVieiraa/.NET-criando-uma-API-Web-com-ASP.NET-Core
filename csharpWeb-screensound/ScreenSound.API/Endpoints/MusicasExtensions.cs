@@ -28,7 +28,7 @@ namespace ScreenSound.API.Endpoints
 
             app.MapPost("/Musicas", ([FromServices] DAL<Musica> dal, [FromBody] MusicaRequest musicaRequest) =>
             {
-                var musica = new Musica(musicaRequest.nome, musicaRequest.anoLancamento);
+                var musica = new Musica(musicaRequest.Nome, musicaRequest.AnoLancamento);
 
                 dal.Adicionar(musica);
                 return Results.Ok();
@@ -45,14 +45,14 @@ namespace ScreenSound.API.Endpoints
 
             });
 
-            app.MapPut("/Musicas", ([FromServices] DAL<Musica> dal, [FromBody] Musica musica) => {
-                var musicaAAtualizar = dal.RecuperarPor(a => a.Id == musica.Id);
+            app.MapPut("/Musicas", ([FromServices] DAL<Musica> dal, [FromBody] MusicaRequestEdit musicaRequestEdit) => {
+                var musicaAAtualizar = dal.RecuperarPor(a => a.Id == musicaRequestEdit.Id);
                 if (musicaAAtualizar is null)
                 {
                     return Results.NotFound();
                 }
-                musicaAAtualizar.Nome = musica.Nome;
-                musicaAAtualizar.AnoLancamento = musica.AnoLancamento;
+                musicaAAtualizar.Nome = musicaRequestEdit.Nome;
+                musicaAAtualizar.AnoLancamento = musicaRequestEdit.AnoLancamento;
 
                 dal.Atualizar(musicaAAtualizar);
                 return Results.Ok();
