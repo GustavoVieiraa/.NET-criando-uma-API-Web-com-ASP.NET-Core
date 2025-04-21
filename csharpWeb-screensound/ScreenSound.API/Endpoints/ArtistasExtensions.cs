@@ -32,7 +32,7 @@ namespace ScreenSound.API.Endpoints
             });
 
             app.MapPost("/Artistas", ([FromServices] DAL<Artista> dal, [FromBody] ArtistaRequest artistaRequest) => {
-                var artista = new Artista(artistaRequest.nome, artistaRequest.bio);
+                var artista = new Artista(artistaRequest.Nome, artistaRequest.Bio);
                 dal.Adicionar(artista);
                 return Results.Ok();
             });
