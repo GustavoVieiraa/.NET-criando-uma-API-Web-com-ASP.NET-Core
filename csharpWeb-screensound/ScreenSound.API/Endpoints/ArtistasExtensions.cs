@@ -13,22 +13,31 @@ namespace ScreenSound.API.Endpoints
             #region Endpoint Artistas
             app.MapGet("/Artistas", ([FromServices] DAL<Artista> dal) =>
             {
-                return Results.Ok(dal.Listar());
+
+                var listaDeArtistas = dal.Listar();
+
+                if (listaDeArtistas is null)
+                {
+                    return Results.NotFound();
+                }
+
+                var listaDeArtistaResponse = EntityListToResponseList(listaDeArtistas);
+
+                return Results.Ok(listaDeArtistaResponse);
+
+                
             });
 
-            app.MapGet("/Artistas/{nome}", (string nome) =>
+            app.MapGet("/Artistas/{nome}", ([FromServices] DAL<Artista> dal, string nome) =>
             {
-                var context = new ScreenSoundContext();
-                var artista = context.Artistas
-                        .Include(a => a.Musicas)
-                        .FirstOrDefault(a => a.Nome.ToUpper().Equals(nome.ToUpper()));
+                var artista = dal.RecuperarPor(a => a.Nome.ToUpper().Equals(nome.ToUpper()));
 
                 if (artista is null)
                 {
                     return Results.NotFound();
                 }
 
-                return Results.Ok(artista);
+                return Results.Ok(EntityToResponse(artista));
 
             });
 
@@ -71,6 +80,15 @@ namespace ScreenSound.API.Endpoints
 
             });
         #endregion
+        }
+        private static ICollection<ArtistaResponse> EntityListToResponseList(IEnumerable<Artista> listaDeArtistas)
+        {
+            return listaDeArtistas.Select(a => EntityToResponse(a)).ToList();
+        }
+
+        private static ArtistaResponse EntityToResponse(Artista artista)
+        {
+            return new ArtistaResponse(artista.Id, artista.Nome, artista.Bio, artista.FotoPerfil);
         }
     }
 }
